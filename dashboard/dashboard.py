@@ -195,21 +195,43 @@ max_date = all_df['order_purchase_timestamp'].max()
 
 # 3. SIDEBAR: FILTER GLOBAL
 
+def reset_filters():
+    """Kembalikan semua filter ke kondisi awal (data keseluruhan)."""
+    st.session_state['start_date_value'] = min_date.date()
+    st.session_state['end_date_value'] = max_date.date()
+    st.session_state['selected_states'] = []
+    st.session_state['selected_categories'] = []
+
+
 with st.sidebar:
     st.title('E-Commerce Dashboard')
 
-    start_date, end_date = st.date_input(
-        label='Rentang Waktu',
-        min_value=min_date,
-        max_value=max_date,
-        value=[min_date, max_date],
+    prev_start = st.session_state.get('start_date_value', min_date.date())
+    prev_end = st.session_state.get('end_date_value', max_date.date())
+
+    start_date = st.date_input(
+        label='Tanggal Awal',
+        value=prev_start,
+        min_value=min_date.date(),
+        max_value=prev_end,
     )
+
+    end_date = st.date_input(
+        label='Tanggal Akhir',
+        value=prev_end,
+        min_value=start_date,
+        max_value=max_date.date(),
+    )
+
+    st.session_state['start_date_value'] = start_date
+    st.session_state['end_date_value'] = end_date
 
     state_options = sorted(all_df['customer_state'].dropna().unique())
     selected_states = st.multiselect(
         label='Customer State',
         options=state_options,
         default=[],
+        key='selected_states',
         help='Kosongkan untuk menampilkan semua state',
     )
 
@@ -218,12 +240,19 @@ with st.sidebar:
         label='Product Category',
         options=category_options,
         default=[],
+        key='selected_categories',
         help='Kosongkan untuk menampilkan semua kategori',
+    )
+
+    st.button(
+        'Reset Filter',
+        on_click=reset_filters,
+        use_container_width=True,
     )
 
 filtered_df = all_df[
     (all_df['order_purchase_timestamp'] >= pd.to_datetime(start_date))
-    & (all_df['order_purchase_timestamp'] <= pd.to_datetime(end_date))
+    & (all_df['order_purchase_timestamp'] < pd.to_datetime(end_date) + pd.Timedelta(days=1))
 ]
 if selected_states:
     filtered_df = filtered_df[filtered_df['customer_state'].isin(selected_states)]
