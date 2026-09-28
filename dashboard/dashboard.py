@@ -1,3 +1,4 @@
+import os
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -187,7 +188,7 @@ def create_revenue_by_seller_df(item_df, top_n=10):
 
 # 2. LOAD DATA
 
-all_df = load_data(r"C:\Tio\ASAH\Proyek Fundamental Analisis Data\Submission\dashboard\main_data.csv")
+all_df = load_data(os.path.join(os.path.dirname(os.path.abspath(__file__)), "main_data.csv"))
 
 min_date = all_df['order_purchase_timestamp'].min()
 max_date = all_df['order_purchase_timestamp'].max()

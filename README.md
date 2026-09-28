@@ -1,4 +1,4 @@
-# E-Commerce Data Analysis Dashboard ✨
+# E-Commerce Data Analysis Dashboard 
 
 ## Setup Environment - Anaconda
 ```
@@ -9,8 +9,8 @@ pip install -r requirements.txt
 
 ## Setup Environment - Shell/Terminal
 ```
-mkdir proyek_analisis_data
-cd proyek_analisis_data
+mkdir ecommerce_analysis
+cd ecommerce_analysis
 pipenv install
 pipenv shell
 pip install -r requirements.txt
@@ -21,4 +21,3 @@ pip install -r requirements.txt
 cd dashboard
 streamlit run dashboard.py
 ```
-"# ecommerce_data_analyst_project" 
